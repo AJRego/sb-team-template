@@ -12,6 +12,11 @@ end
 ```space-lua
 team = {}
 
+-- Widget links open pages through editor.navigate, so they work wherever the space is served
+local function go(ref)
+  return function() editor.navigate(ref) end
+end
+
 local function avatar(handle)
   return dom.span { class = "team-avatar team-" .. handle, handle:sub(1, 1):upper() }
 end
@@ -28,8 +33,8 @@ function team.header()
     dom.div {
       class = "team-pills",
       dom.span { class = "team-pill", open .. " open tasks" },
-      dom.a { class = "team-pill", href = "/" .. meeting, "last sync " .. meeting:match "%d+%-%d+%-%d+" },
-      dom.a { class = "team-pill team-pill-warn", href = "/ADR", waiting .. (waiting == 1 and " decision" or " decisions") .. " waiting" },
+      dom.a { class = "team-pill", onclick = go(meeting), "last sync " .. meeting:match "%d+%-%d+%-%d+" },
+      dom.a { class = "team-pill team-pill-warn", onclick = go "ADR", waiting .. (waiting == 1 and " decision" or " decisions") .. " waiting" },
     },
   })
 end
@@ -41,11 +46,11 @@ function team.sprint(page)
   for _, t in ipairs(tasks) do
     if t.done then done = done + 1 end
     local handle = t.text:match "@(%w+)"
-    table.insert(rows, dom.a { class = t.done and "team-task team-done" or "team-task", href = "/" .. t.ref, avatar(handle), dom.span { (t.text:gsub("@%w+ ", "")) } })
+    table.insert(rows, dom.a { class = t.done and "team-task team-done" or "team-task", onclick = go(t.ref), avatar(handle), dom.span { (t.text:gsub("@%w+ ", "")) } })
   end
   return widget.htmlBlock(dom.div {
     class = "team team-sprint",
-    dom.div { class = "team-sprint-head", dom.a { href = "/" .. page, page:match "[^/]+$" }, dom.span { done .. " of " .. #tasks .. " done · ends 10 October" } },
+    dom.div { class = "team-sprint-head", dom.a { onclick = go(page), page:match "[^/]+$" }, dom.span { done .. " of " .. #tasks .. " done · ends 10 October" } },
     dom.div { class = "team-bar", dom.div { style = "width:" .. math.max(4, math.floor(100 * done / #tasks)) .. "%" } },
     dom.div { class = "team-tasks", table.unpack(rows) },
   })
@@ -77,7 +82,7 @@ function team.people()
     end
     table.insert(cards, dom.a {
       class = "team-person",
-      href = "/" .. p.name,
+      onclick = go(p.name),
       avatar(p.identity), dom.span { p.name:match "[^/]+$" }, dom.span { class = "team-load", string.rep("■", n) }, dom.strong { tostring(n) },
     })
   end
@@ -98,7 +103,7 @@ function team.decisions()
   return widget.htmlBlock(dom.div {
     class = "team team-decisions",
     dom.div { class = "team-chips", table.unpack(chips) },
-    waiting and dom.p { "Waiting on a decision: ", dom.a { href = "/" .. waiting, (waiting:gsub("^ADR/", "")) } } or nil,
+    waiting and dom.p { "Waiting on a decision: ", dom.a { onclick = go(waiting), (waiting:gsub("^ADR/", "")) } } or nil,
   })
 end
 ```
@@ -302,5 +307,10 @@ html:root {
 }
 .team-decisions a {
   color: #5eead4 !important;
+}
+
+/* Widget links navigate on click, so give them a pointer */
+.team a {
+  cursor: pointer;
 }
 ```
