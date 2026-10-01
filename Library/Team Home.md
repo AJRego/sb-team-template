@@ -77,7 +77,7 @@ function team.people()
     end
     table.insert(cards, dom.a {
       class = "team-person",
-      href = "/" .. p.name,
+      href = p.name,
       avatar(p.identity), dom.span { p.name:match "[^/]+$" }, dom.span { class = "team-load", string.rep("■", n) }, dom.strong { tostring(n) },
     })
   end
