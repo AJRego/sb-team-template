@@ -3,15 +3,10 @@
 The team wiki’s home page: the current sprint, open tasks per person and where our decisions stand, plus `team.openTasks` for person pages. The space opens in dark mode.
 
 ```space-lua
--- Dark by default; the "Editor: Toggle Dark Mode" command still wins once used
-event.listen {
-  name = "editor:init",
-  run = function()
-    if clientStore.get("darkMode") == nil then
-      editor.setUiOption("darkMode", true)
-    end
-  end,
-}
+-- Dark by default, unless you picked a theme yourself with "Editor: Toggle Dark Mode"
+if clientStore.get("darkMode") == nil and editor.getUiOption("darkMode") == nil then
+  editor.setUiOption("darkMode", true)
+end
 ```
 
 ```space-lua
@@ -304,5 +299,8 @@ html:root {
 .team-decisions p {
   margin: 10px 0 0;
   font-size: 0.9em;
+}
+.team-decisions a {
+  color: #5eead4 !important;
 }
 ```
