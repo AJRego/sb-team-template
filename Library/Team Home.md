@@ -9,13 +9,21 @@ local function avatar(handle)
   return dom.span { class = "team-avatar team-" .. handle, handle:sub(1, 1):upper() }
 end
 
+-- A terminal-style status line: open tasks, the last weekly sync and decisions still waiting
 function team.header()
   local meetings = query[[from p = index.contentPages "meeting" order by p.date desc limit 1 select p.name]]
   local meeting = meetings[1]
+  local open = #query[[from t = index.tasks() where not t.done and t.recipients select t]]
+  local waiting = #query[[from p = index.contentPages "adr" where p.status == "proposed" select p]]
   return widget.htmlBlock(dom.div {
     class = "team team-header",
-    dom.div { dom.h1 { "Driftwood" }, dom.p { "The team wiki: how we work, what we decided, what we’re building." } },
-    dom.a { class = "team-meeting", href = "/" .. meeting, dom.span { "Last sync" }, dom.strong { meeting:match "%d+%-%d+%-%d+" } },
+    dom.div { class = "team-prompt", dom.span { class = "team-host", "driftwood" }, dom.span { ":~$ status" }, dom.span { class = "team-cursor", "_" } },
+    dom.div {
+      class = "team-pills",
+      dom.span { class = "team-pill", open .. " open tasks" },
+      dom.a { class = "team-pill", href = "/" .. meeting, "last sync " .. meeting:match "%d+%-%d+%-%d+" },
+      dom.a { class = "team-pill team-pill-warn", href = "/ADR", waiting .. (waiting == 1 and " decision" or " decisions") .. " waiting" },
+    },
   })
 end
 
@@ -26,7 +34,7 @@ function team.sprint(page)
   for _, t in ipairs(tasks) do
     if t.done then done = done + 1 end
     local handle = t.text:match "@(%w+)"
-    table.insert(rows, dom.div { class = t.done and "team-task team-done" or "team-task", avatar(handle), dom.span { (t.text:gsub("@%w+ ", "")) } })
+    table.insert(rows, dom.a { class = t.done and "team-task team-done" or "team-task", href = "/" .. t.ref, avatar(handle), dom.span { (t.text:gsub("@%w+ ", "")) } })
   end
   return widget.htmlBlock(dom.div {
     class = "team team-sprint",
@@ -63,7 +71,7 @@ function team.people()
     table.insert(cards, dom.a {
       class = "team-person",
       href = "/" .. p.name,
-      avatar(p.identity), dom.span { p.name:match "[^/]+$" }, dom.strong { tostring(n) },
+      avatar(p.identity), dom.span { p.name:match "[^/]+$" }, dom.span { class = "team-load", string.rep("■", n) }, dom.strong { tostring(n) },
     })
   end
   return widget.htmlBlock(dom.div { class = "team team-people", table.unpack(cards) })
@@ -89,9 +97,9 @@ end
 ```
 
 ```space-style
-/* The team’s accent colour */
+/* The team’s accent colour; CONFIG opens this space in dark mode */
 html:root {
-  --ui-accent-color: #0d9488;
+  --ui-accent-color: #2dd4bf;
 }
 
 /* Let the home widgets sit on the page without the usual widget frame */
@@ -100,72 +108,81 @@ html:root {
   background: none !important;
 }
 
-/* Banner with the link to the last weekly sync */
+/* Flat panels with square corners, like a terminal */
+.team-header,
+.team-sprint,
+.team-person {
+  border: 1px solid #1f3b3a;
+  background: #0b1514;
+}
+
+/* The status line */
 .team-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  padding: 18px 20px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #0f766e, #14b8a6);
-  color: #fff;
-}
-.team-header h1 {
-  margin: 0;
-  font-size: 1.9em;
-  color: #fff;
-}
-.team-header p {
-  margin: 4px 0 0;
-  font-size: 0.85em;
+  padding: 14px 16px;
   color: #ccfbf1;
 }
-.team-meeting {
+.team-prompt {
+  font-size: 1.3em;
+  font-weight: 700;
+}
+.team-host {
+  color: #2dd4bf;
+}
+.team-cursor {
+  margin-left: 4px;
+  color: #2dd4bf;
+  animation: team-blink 1s steps(1) infinite;
+}
+@keyframes team-blink {
+  50% { opacity: 0; }
+}
+.team-pills {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  padding: 8px 12px;
-  border-radius: 10px;
-  background: rgba(255,255,255,.16);
-  color: #fff !important;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.team-pill {
+  padding: 2px 10px;
+  border: 1px solid #2dd4bf;
+  color: #5eead4 !important;
+  font-size: 0.8em;
   text-decoration: none !important;
-  white-space: nowrap;
 }
-.team-meeting span {
-  font-size: 0.75em;
-  color: #ccfbf1;
+.team-pill::before {
+  content: "● ";
+}
+.team-pill-warn {
+  border-color: #fbbf24;
+  color: #fbbf24 !important;
 }
 
 /* The current sprint: progress bar and its tasks */
 .team-sprint {
-  padding: 14px 16px;
-  border: 1px solid #99f6e4;
-  border-radius: 12px;
-  background: #f0fdfa;
+  padding: 12px 16px;
 }
 .team-sprint-head {
   display: flex;
   justify-content: space-between;
-  font-size: 0.9em;
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 .team-sprint-head a {
   font-weight: 700;
-  color: #115e59 !important;
+  color: #5eead4 !important;
 }
 .team-sprint-head span {
-  color: #0f766e;
+  color: #5f8f8a;
 }
 .team-bar {
-  height: 8px;
+  height: 6px;
   margin: 8px 0 10px;
-  border-radius: 99px;
-  background: #ccfbf1;
+  background: #1f3b3a;
 }
 .team-bar div {
   height: 100%;
-  border-radius: 99px;
-  background: #14b8a6;
+  background: #2dd4bf;
 }
 .team-tasks {
   display: flex;
@@ -177,60 +194,76 @@ html:root {
   align-items: center;
   gap: 10px;
   font-size: 0.9em;
+  color: #ccfbf1 !important;
+  text-decoration: none !important;
+}
+.team-task:hover span {
+  color: #5eead4;
+  text-decoration: underline;
+}
+.team-task::before {
+  content: "[ ]";
+  color: #5f8f8a;
+}
+.team-done::before {
+  content: "[x]";
 }
 
-/* Avatars: one colour per person */
+/* Avatars: one colour per person, square like everything else here */
 .team-avatar {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex: none;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  color: #fff;
-  font-size: 0.8em;
+  width: 22px;
+  height: 22px;
+  color: #0b1514;
+  font-size: 0.75em;
   font-weight: 700;
 }
 .team-sam {
-  background: #0d9488;
+  background: #2dd4bf;
 }
 .team-pete {
-  background: #2563eb;
+  background: #60a5fa;
 }
 .team-jo {
-  background: #db2777;
+  background: #f472b6;
 }
 .team-jane {
-  background: #7c3aed;
+  background: #a78bfa;
 }
 .team-mateo {
-  background: #ea580c;
+  background: #fb923c;
 }
 .team-hana {
-  background: #65a30d;
+  background: #a3e635;
 }
 
-/* Open tasks per person */
+/* Open tasks per person, as a load bar */
 .team-people {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
 }
 .team-person {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 10px;
-  border: 1px solid #ccfbf1;
-  border-radius: 10px;
-  color: #134e4a !important;
+  padding: 6px 10px;
+  color: #ccfbf1 !important;
   text-decoration: none !important;
   font-size: 0.9em;
 }
-.team-person strong {
+.team-load {
   margin-left: auto;
-  color: #0d9488;
+  color: #2dd4bf;
+  letter-spacing: 2px;
+}
+.team-person strong {
+  width: 1.5em;
+  text-align: right;
+  color: #5eead4;
 }
 
 /* Where decisions stand, and the one still waiting */
@@ -240,26 +273,21 @@ html:root {
   gap: 8px;
 }
 .team-chip {
-  padding: 4px 12px;
-  border-radius: 99px;
+  padding: 2px 10px;
+  border: 1px solid currentColor;
   font-size: 0.85em;
-  font-weight: 600;
 }
 .team-chip-accepted {
-  background: #ccfbf1;
-  color: #115e59;
+  color: #2dd4bf;
 }
 .team-chip-proposed {
-  background: #fef3c7;
-  color: #92400e;
+  color: #fbbf24;
 }
 .team-chip-superseded {
-  background: #e7e5e4;
-  color: #57534e;
+  color: #94a3b8;
 }
 .team-chip-deprecated {
-  background: #fee2e2;
-  color: #991b1b;
+  color: #f87171;
 }
 .team-decisions p {
   margin: 10px 0 0;
