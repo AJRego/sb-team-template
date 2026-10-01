@@ -2,7 +2,7 @@
 tags: sprint
 project: "[[Projects/Project Phoenix]]"
 ---
-Sprint 3 of [[Projects/Project Phoenix|Project Phoenix]], 29 September to 10 October: get two devices syncing one library.
+Sprint 3 of [[Projects/Project Phoenix|Project Phoenix]], 28 September to 9 October: get two devices syncing one library.
 
 # Goals
 1. Sync server stores and serves library changes
@@ -11,5 +11,6 @@ Sprint 3 of [[Projects/Project Phoenix|Project Phoenix]], 29 September to 10 Oct
 
 # Tasks
 * [ ] @jane change feed endpoint on the sync server
+* [ ] @pete push and pull changes from the desktop app
 * [ ] @hana read-only library view on mobile
 * [ ] @mateo CI job that runs two clients against one server

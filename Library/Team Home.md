@@ -112,7 +112,7 @@ function team.sprint(page)
         onclick = go(page),
         page:match "[^/]+$",
       },
-      dom.span { done .. " of " .. #tasks .. " done · ends 10 October" },
+      dom.span { done .. " of " .. #tasks .. " done · ends 9 October" },
     },
     dom.div {
       class = "team-bar",

@@ -1,7 +1,7 @@
 ---
 tags: adr
 status: proposed
-date: "2026-09-20"
+date: "2026-09-21"
 owner: "[[People/Pete Johnson]]"
 project: "[[Projects/Project Phoenix]]"
 related:
@@ -14,5 +14,5 @@ Open question: does the 10× speed-up from [[Roadmap/Fast Import|Fast Import]] m
 <!--
 @pete before we rewrite it: how fast is the importer since [[Roadmap/Fast Import|Fast Import]] landed? If it’s fast enough, the sync server could just call the one we have. -- @jane
 
-Not measured yet, that’s my profiling task from [[Meetings/Weekly Sync 2026-09-25|last week’s sync]], on the 200k sample library. @jane I’ll post the numbers here, and we decide at Friday’s sync. -- @pete
+Ten times faster on the small test library, but not measured on the 200k one yet: that’s my profiling task from [[Meetings/Weekly Sync 2026-09-25|last week’s sync]]. @jane I’ll post the numbers here, and we decide at Friday’s sync. -- @pete
 -->

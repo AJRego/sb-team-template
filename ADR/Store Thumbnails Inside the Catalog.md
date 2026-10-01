@@ -1,7 +1,7 @@
 ---
 tags: adr
 status: deprecated
-date: "2026-05-10"
+date: "2026-08-20"
 owner: "[[People/Pete Johnson]]"
 related:
   - "[[ADR/Use SQLite for the Catalog]]"
