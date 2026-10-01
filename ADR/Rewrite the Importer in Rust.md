@@ -12,7 +12,7 @@ For [[Projects/Project Phoenix|Project Phoenix]], rewrite the importer in Rust s
 Open question: does the 10× speed-up from [[Roadmap/Fast Import|Fast Import]] make this unnecessary?
 
 <!--
-@pete have we measured the import since [[Roadmap/Fast Import|Fast Import]] landed? If it’s fast enough now, I’d rather not maintain a second importer. -- @hana
+@pete before we rewrite it: how fast is the importer since [[Roadmap/Fast Import|Fast Import]] landed? If it’s fast enough, the sync server could just call the one we have. -- @jane
 
-Fair point. @mateo, could you time an import of the 50,000-photo test library this week? Then we decide at Monday’s sync. -- @pete
+Not measured yet, that’s my profiling task from [[Meetings/Weekly Sync 2026-09-25|last week’s sync]], on the 200k sample library. @jane I’ll post the numbers here, and we decide at Friday’s sync. -- @pete
 -->
