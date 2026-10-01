@@ -11,12 +11,12 @@ Project Phoenix is Driftwood’s next big step: shared family libraries, synced 
 
 # Decisions
 ${query[[
-  from p = index.contentPages("adr")
+  from p = index.contentPages "adr"
   where p.project == "[[Projects/Project Phoenix]]"
   order by p.date desc
   select {
     ADR = "[[" .. p.name .. "]]",
     Status = p.status,
-    Decided = p.date
+    Decided = p.date,
   }
 ]]}
