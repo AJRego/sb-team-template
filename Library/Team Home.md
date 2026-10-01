@@ -323,6 +323,7 @@ html:root {
 }
 .team-task::before {
   content: "[ ]";
+  flex: none;
   color: #5f8f8a;
 }
 .team-done::before {
@@ -374,6 +375,9 @@ html:root {
   color: #ccfbf1 !important;
   text-decoration: none !important;
   font-size: 0.9em;
+}
+.team-person span {
+  white-space: nowrap;
 }
 .team-load {
   margin-left: auto;
