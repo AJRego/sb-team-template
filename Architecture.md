@@ -2,10 +2,6 @@ How Driftwood fits together, drawn live from the frontmatter of every page tagge
 
 ${mermaid.diagram(mermaid.relationGraph {
   pages = query[[from index.contentPages "component"]],
-  relations = {
-    "connectsTo",
-    "consumes",
-  },
   direction = "LR",
 })}
 
