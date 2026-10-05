@@ -1,6 +1,6 @@
 #meta
 
-The team wiki’s home page: the current sprint, open tasks per person and where our decisions stand, plus `team.openTasks` for person pages. The space opens in dark mode.
+The team wiki’s home page: the current sprint, open tasks per person and where our decisions stand, plus the open tasks shown at the top of every person page. The space opens in dark mode.
 
 ```space-lua
 -- Dark by default, unless you picked a theme yourself with "Editor: Toggle Dark Mode"
@@ -31,6 +31,18 @@ local function addressedTo(task, target)
   return table.find(task.recipients, function(r)
     return r == target
   end) ~= nil
+end
+
+local MONTHS = { "January", "February", "March", "April", "May", "June", "July",
+  "August", "September", "October", "November", "December" }
+
+-- "2026-10-09" as "9 October"
+local function longDate(iso)
+  local _, m, d = tostring(iso):match "^(%d+)-(%d+)-(%d+)$"
+  if not m then
+    return tostring(iso)
+  end
+  return tonumber(d) .. " " .. MONTHS[tonumber(m)]
 end
 
 local function plural(n, word)
@@ -103,7 +115,13 @@ function team.sprint(page)
       dom.span { (t.text:gsub("@%w+ ", "")) },
     })
   end
-  local progress = math.max(4, math.floor(100 * done / #tasks))
+  local progress = #tasks > 0 and math.max(4, math.floor(100 * done / #tasks)) or 0
+  local ends = query[[
+    from p = index.pages()
+    where p.name == page
+    select p.ends
+  ]]
+  ends = ends[1]
   return widget.htmlBlock(dom.div {
     class = "team team-sprint",
     dom.div {
@@ -112,7 +130,7 @@ function team.sprint(page)
         onclick = go(page),
         page:match "[^/]+$",
       },
-      dom.span { done .. " of " .. #tasks .. " done · ends 9 October" },
+      dom.span { done .. " of " .. #tasks .. " done" .. (ends and (" · ends " .. longDate(ends)) or "") },
     },
     dom.div {
       class = "team-bar",
@@ -125,17 +143,8 @@ function team.sprint(page)
   })
 end
 
--- Open tasks addressed to an identity; on a person page, ${team.openTasks()} uses the page's own `identity`
+-- Open tasks addressed to an identity, written as "@hana"
 function team.openTasks(id)
-  if not id then
-    local name = editor.getCurrentPage()
-    local identities = query[[
-      from p = index.pages()
-      where p.name == name
-      select p.identity
-    ]]
-    id = identities[1]
-  end
   local target = "@" .. id
   return query[[
     from t = index.tasks()
@@ -143,6 +152,27 @@ function team.openTasks(id)
     select templates.taskItem(t)
   ]]
 end
+
+-- Above every page with an `identity`: that person's open tasks, wherever they were assigned
+view.define {
+  name = "team.openTasks",
+  title = "Open tasks",
+  dock = "page-top",
+  frame = "minimal",
+  supportedDocks = { "page-top", "page-bottom", "rhs" },
+  refreshOn = { "navigate", "index" },
+  content = function()
+    local id = (editor.getCurrentPageMeta() or {}).identity
+    if not id then
+      return nil
+    end
+    local tasks = team.openTasks(id)
+    if #tasks == 0 then
+      return nil
+    end
+    return "**Open tasks for @" .. id .. "**\n" .. table.concat(tasks)
+  end,
+}
 
 -- Open tasks per team member: pages tagged #team, matched to tasks by their `identity` (e.g. hana, addressed as @hana)
 function team.people()

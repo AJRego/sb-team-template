@@ -1,6 +1,8 @@
 ---
 tags: sprint
 project: "[[Projects/Project Phoenix]]"
+starts: "2026-09-28"
+ends: "2026-10-09"
 ---
 Sprint 3 of [[Projects/Project Phoenix|Project Phoenix]], 28 September to 9 October: get two devices syncing one library.
 
