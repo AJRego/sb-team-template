@@ -1,6 +1,6 @@
 #meta
 
-Space configuration: the space tree docked on the left, and clicking a tag opens the page that collects it.
+Configuración del espacio: el árbol del espacio anclado a la izquierda, y al pulsar una etiqueta se abre la página que la recoge.
 
 ```space-lua
 config.set("view.defaults", {
@@ -16,28 +16,28 @@ tag.define {
 }
 
 tag.define {
-  name = "component",
-  tagPage = "Architecture",
+  name = "componente",
+  tagPage = "Arquitectura",
 }
 
 tag.define {
-  name = "meeting",
-  tagPage = "Meetings",
+  name = "reunión",
+  tagPage = "Reuniones",
 }
 
 tag.define {
-  name = "feature",
+  name = "funcionalidad",
   tagPage = "Roadmap",
 }
 
 tag.define {
-  name = "person",
-  tagPage = "People",
+  name = "persona",
+  tagPage = "Personas",
 }
 
 tag.define {
-  name = "team",
-  tagPage = "People",
+  name = "equipo",
+  tagPage = "Personas",
 }
 
 tag.define {
@@ -46,7 +46,7 @@ tag.define {
 }
 
 tag.define {
-  name = "project",
-  tagPage = "Projects",
+  name = "proyecto",
+  tagPage = "Proyectos",
 }
 ```

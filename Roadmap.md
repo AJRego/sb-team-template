@@ -1,11 +1,11 @@
-What we’re building and who owns it, collected from pages tagged `#feature`.
+Qué estamos construyendo y quién es responsable, recopilado de las páginas con etiqueta `#funcionalidad`.
 
 ${query[[
-  from f = index.contentPages "feature"
-  order by f.status
+  from f = index.contentPages "funcionalidad"
+  order by f.estado
   select {
-    Feature = "[[" .. f.name .. "]]",
-    Status = f.status,
-    Owner = f.owner,
+    Funcionalidad = "[[" .. f.name .. "]]",
+    Estado = f.estado,
+    Responsable = f.responsable,
   }
 ]]}

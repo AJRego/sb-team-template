@@ -3,16 +3,16 @@ ${team.header()}
 
 ${team.sprint "Sprints/Phoenix Sprint 3"}
 
-# Who’s on what
+# Quién hace qué
 ${team.people()}
 
-# Decisions
+# Decisiones
 ${team.decisions()}
 
-# How this is built
-Plain markdown pages, plus a few SilverBullet features:
-* [Tags](https://docs.silverbullet.md/Tag): ADRs, components, meetings, features, sprints and people are tagged pages, and each tag has a page that collects them, like [[ADR]] and [[Architecture]].
-* [Tasks](https://docs.silverbullet.md/Task) and [Mentions](https://docs.silverbullet.md/At-Mention): a task in any page that mentions `@hana` shows up under Hana in “Who’s on what” and on her page.
-* [Identities](https://docs.silverbullet.md/Identity): everyone on the team has a person page they can be mentioned by.
-* [Mermaid](https://github.com/silverbulletmd/silverbullet-diagram): the diagrams in [[Architecture]] are text you can edit.
-* [Space Lua](https://docs.silverbullet.md/Space%20Lua) and [Space Style](https://docs.silverbullet.md/Space%20Style): the header, sprint, people and decision widgets live in [[Library/Team Home]] and [[Library/Decision Card]].
+# Cómo está construido
+Páginas markdown corrientes, más algunas funciones de SilverBullet:
+* [Tags](https://docs.silverbullet.md/Tag): los ADR, componentes, reuniones, funcionalidades, sprints y personas son páginas etiquetadas, y cada etiqueta tiene una página que las recoge, como [[ADR]] y [[Arquitectura]].
+* [Tasks](https://docs.silverbullet.md/Task) y [Mentions](https://docs.silverbullet.md/At-Mention): una tarea en cualquier página que mencione a `@hana` aparece bajo Hana en "Quién hace qué" y en su propia página.
+* [Identities](https://docs.silverbullet.md/Identity): cada miembro del equipo tiene una página de persona por la que se le puede mencionar.
+* [Mermaid](https://github.com/silverbulletmd/silverbullet-diagram): los diagramas de [[Arquitectura]] son texto que puedes editar.
+* [Space Lua](https://docs.silverbullet.md/Space%20Lua) y [Space Style](https://docs.silverbullet.md/Space%20Style): los widgets de cabecera, sprint, personas y decisiones viven en [[Library/Inicio del equipo]] y [[Library/Tarjeta de decisión]].

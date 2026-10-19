@@ -1,18 +1,18 @@
 ---
 tags: sprint
-project: "[[Projects/Project Phoenix]]"
-starts: "2026-09-28"
-ends: "2026-10-09"
+proyecto: "[[Proyectos/Project Phoenix]]"
+inicio: "2026-09-28"
+fin: "2026-10-09"
 ---
-Sprint 3 of [[Projects/Project Phoenix|Project Phoenix]], 28 September to 9 October: get two devices syncing one library.
+Sprint 3 de [[Proyectos/Project Phoenix|Project Phoenix]], del 28 de septiembre al 9 de octubre: conseguir que dos dispositivos sincronicen una biblioteca.
 
-# Goals
-1. Sync server stores and serves library changes
-2. Desktop app pushes and pulls changes
-3. Mobile app shows a synced library, read-only
+# Objetivos
+1. El servidor de sincronización almacena y sirve los cambios de la biblioteca
+2. La app de escritorio sube y baja cambios
+3. La app móvil muestra una biblioteca sincronizada, de solo lectura
 
-# Tasks
-* [ ] @jane change feed endpoint on the sync server
-* [ ] @pete push and pull changes from the desktop app
-* [ ] @hana read-only library view on mobile
-* [ ] @mateo CI job that runs two clients against one server
+# Tareas
+* [ ] @jane endpoint del feed de cambios en el servidor de sincronización
+* [ ] @pete subir y bajar cambios desde la app de escritorio
+* [ ] @hana vista de biblioteca de solo lectura en móvil
+* [ ] @mateo trabajo de CI que ejecute dos clientes contra un servidor
